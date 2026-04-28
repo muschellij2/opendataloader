@@ -1,0 +1,83 @@
+---
+title: "Using opendataloader"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using opendataloader}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`opendataloader` is a small R wrapper around the Python
+`opendataloader-pdf` package. The Python package is declared through
+`reticulate::py_require()` when this package loads, so recent versions of
+reticulate can resolve a managed Python environment automatically.
+
+The upstream project recommends batch conversion because each conversion starts
+a Java process. The same pattern in R is to pass a vector of PDF paths in one
+call:
+
+```{r batch-convert, eval = FALSE}
+library(opendataloader)
+
+pdf_files <- c(
+  "samples/pdf/1901.03003.pdf",
+  "samples/pdf/2408.02509v1.pdf",
+  "samples/pdf/chinese_scan.pdf",
+  "samples/pdf/lorem.pdf"
+)
+
+output_dir <- tempfile("opendataloader-output-")
+dir.create(output_dir)
+
+convert_pdf(
+  input_path = pdf_files,
+  output_dir = output_dir,
+  format = c("json", "markdown"),
+  quiet = TRUE
+)
+
+list.files(output_dir)
+```
+
+Example output from the upstream batch-processing example:
+
+```text
+Found 4 PDFs in pdf/
+
+==========================================================
+Method 1: Batch convert with file list
+==========================================================
+Document                                  Pages Top-level
+----------------------------------------------------------
+1901.03003                                   15       241
+2408.02509v1                                 14       365
+chinese_scan                                  1         1
+lorem                                         1         2
+----------------------------------------------------------
+Total                                        31       609
+Processed 4 documents
+Time: 7.95s (single JVM invocation)
+```
+
+Hybrid mode uses an optional Python extra and should be requested before Python
+is initialized:
+
+```{r hybrid, eval = FALSE}
+opendataloader_pdf_require(extras = "hybrid")
+
+convert_pdf(
+  input_path = "samples/pdf/1901.03003.pdf",
+  output_dir = output_dir,
+  hybrid = "docling-fast",
+  hybrid_mode = "full"
+)
+```
+
+The Python package requires Python 3.10 or newer and Java 11 or newer.

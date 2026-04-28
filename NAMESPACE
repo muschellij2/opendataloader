@@ -1,0 +1,8 @@
+export(convert_pdf)
+export(opendataloader_pdf)
+export(opendataloader_pdf_require)
+export(opendataloader_python_requirements)
+export(py_require_opendataloader_pdf)
+export(check_java)
+importFrom(reticulate,import)
+importFrom(reticulate,py_require)

@@ -1,0 +1,12 @@
+^opendataloader\.Rproj$
+^\.Rproj\.user$
+^\.git$
+^\.gitignore$
+^\.github$
+^\.DS_Store$
+^.*\.DS_Store$
+^\.Rhistory$
+^\.\.Rcheck$
+^.*\.Rcheck$
+^opendataloader_.*\.tar\.gz$
+^coverage\.xml$

@@ -1,0 +1,7 @@
+.Rproj.user
+.DS_Store
+.Rhistory
+..Rcheck
+*.Rcheck
+opendataloader_*.tar.gz
+coverage.xml
