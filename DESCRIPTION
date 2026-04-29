@@ -3,9 +3,7 @@ Title: R Interface to OpenDataLoader PDF
 Version: 0.0.0.9000
 Authors@R: 
     person("John", "Muschelli", role = c("aut", "cre"),
-           email = "john.muschelli@gmail.com")
-Author: John Muschelli [aut, cre]
-Maintainer: John Muschelli <john.muschelli@gmail.com>
+           email = "muschellij2@gmail.com")
 Description: Provides a reticulate-backed R interface to the
     opendataloader-pdf Python package for converting PDF files to Markdown,
     JSON, and HTML.
@@ -17,7 +15,8 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    xml2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
