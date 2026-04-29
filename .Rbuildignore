@@ -1,8 +1,10 @@
 ^opendataloader\.Rproj$
+^README\.Rmd$
 ^\.Rproj\.user$
 ^\.git$
 ^\.gitignore$
 ^\.github$
+^\.githooks$
 ^\.DS_Store$
 ^.*\.DS_Store$
 ^\.Rhistory$
@@ -10,3 +12,4 @@
 ^.*\.Rcheck$
 ^opendataloader_.*\.tar\.gz$
 ^coverage\.xml$
+^codecov\.yml$

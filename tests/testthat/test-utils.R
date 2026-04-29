@@ -23,3 +23,20 @@ test_that("maybe_normalize_dir validates output directories", {
   expect_error(opendataloader:::maybe_normalize_dir(c("a", "b")), "`output_dir`")
   expect_error(opendataloader:::maybe_normalize_dir(""), "`output_dir`")
 })
+
+test_that("option validators cover optional and passthrough branches", {
+  expect_null(opendataloader:::check_optional_character(NULL, "x"))
+  expect_equal(opendataloader:::check_optional_character(c("a", "b"), "x"), c("a", "b"))
+  expect_error(opendataloader:::check_optional_character("", "x"), "`x`")
+
+  expect_equal(opendataloader:::check_hybrid_timeout("2500"), "2500")
+
+  expect_equal(opendataloader:::validate_convert_dots(list()), list())
+  expect_error(
+    opendataloader:::validate_convert_dots(
+      list(format = "markdown"),
+      reserved = "format"
+    ),
+    "Do not pass explicit"
+  )
+})

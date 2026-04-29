@@ -8,8 +8,30 @@ convert_pdf(
   input_path,
   output_dir = "output",
   format = c("markdown", "json"),
+  password = NULL,
+  content_safety_off = NULL,
+  sanitize = FALSE,
+  keep_line_breaks = FALSE,
+  replace_invalid_chars = NULL,
+  use_struct_tree = FALSE,
+  table_method = NULL,
+  reading_order = NULL,
+  markdown_page_separator = NULL,
+  text_page_separator = NULL,
+  html_page_separator = NULL,
+  image_output = NULL,
+  image_format = NULL,
+  image_dir = NULL,
+  pages = NULL,
+  include_header_footer = FALSE,
+  detect_strikethrough = FALSE,
   hybrid = NULL,
   hybrid_mode = NULL,
+  hybrid_url = NULL,
+  hybrid_timeout = NULL,
+  hybrid_fallback = FALSE,
+  to_stdout = FALSE,
+  verbose = TRUE,
   check_java_available = TRUE,
   ...
 )
@@ -20,23 +42,84 @@ convert_pdf(
 \item{output_dir}{Directory where converted files should be written.}
 
 \item{format}{Output format string, or a character vector collapsed with
-commas. Common values are \code{"markdown"}, \code{"json"}, and \code{"html"}.}
+commas. Values are \code{"json"}, \code{"text"}, \code{"html"}, \code{"pdf"}, \code{"markdown"},
+\code{"markdown-with-html"}, \code{"markdown-with-images"}, and \code{"tagged-pdf"}.}
+
+\item{password}{Optional password for encrypted PDFs.}
+
+\item{content_safety_off}{Optional content safety filters to disable.
+Values are \code{"all"}, \code{"hidden-text"}, \code{"off-page"}, \code{"tiny"}, and
+\code{"hidden-ocg"}.}
+
+\item{sanitize}{If \code{TRUE}, enable sensitive data sanitization.}
+
+\item{keep_line_breaks}{If \code{TRUE}, preserve original line breaks.}
+
+\item{replace_invalid_chars}{Optional replacement character for invalid or
+unrecognized characters.}
+
+\item{use_struct_tree}{If \code{TRUE}, use the PDF structure tree.}
+
+\item{table_method}{Optional table detection method. Values are \code{"default"}
+and \code{"cluster"}.}
+
+\item{reading_order}{Optional reading order algorithm. Values are \code{"off"}
+and \code{"xycut"}.}
+
+\item{markdown_page_separator, text_page_separator, html_page_separator}{Optional page separators. Use \code{"\%page-number\%"} for page numbers.}
+
+\item{image_output}{Optional image output mode. Values are \code{"off"},
+\code{"embedded"}, and \code{"external"}.}
+
+\item{image_format}{Optional extracted image format. Values are \code{"png"} and
+\code{"jpeg"}.}
+
+\item{image_dir}{Optional directory for extracted images.}
+
+\item{pages}{Optional page range string, for example \code{"1,3,5-7"}.}
+
+\item{include_header_footer}{If \code{TRUE}, include page headers and footers.}
+
+\item{detect_strikethrough}{If \code{TRUE}, detect strikethrough text.}
 
 \item{hybrid}{Optional hybrid backend name, for example \code{"docling-fast"}.
 Call \code{opendataloader_pdf_require(extras = "hybrid")} before this when
 using hybrid mode.}
 
-\item{hybrid_mode}{Optional hybrid mode passed through to Python, for
-example \code{"full"}.}
+\item{hybrid_mode}{Optional hybrid mode passed through to Python. Values are
+\code{"auto"} and \code{"full"}.}
+
+\item{hybrid_url}{Optional hybrid backend server URL.}
+
+\item{hybrid_timeout}{Optional hybrid backend request timeout in
+milliseconds. Use \code{0} for no timeout.}
+
+\item{hybrid_fallback}{If \code{TRUE}, opt in to Java fallback on hybrid backend
+errors.}
+
+\item{to_stdout}{If \code{TRUE}, write output to stdout instead of file. The
+upstream converter supports this for single-format output.}
+
+\item{verbose}{If \code{TRUE}, run the Python converter in verbose mode. This is
+passed to Python as \code{quiet = !verbose}.}
 
 \item{check_java_available}{If \code{TRUE}, verify that \code{java} is on PATH before
 calling Python.}
 
-\item{...}{Additional keyword arguments passed to
-\code{opendataloader_pdf.convert()}.}
+\item{...}{Additional named arguments passed to
+\code{opendataloader_pdf.convert()}. Values must be \code{NULL}, logical, numeric,
+or character vectors.}
 }
 \value{
-The value returned by \code{opendataloader_pdf.convert()}.
+An \code{opendataloader_conversion} object, a list with:
+\describe{
+\item{input_path}{Normalized input paths.}
+\item{output_dir}{Normalized output directory, or \code{NULL}.}
+\item{format}{Comma-separated output formats passed to Python.}
+\item{output_files}{Files present in \code{output_dir} after conversion.}
+\item{result}{Raw value returned by \code{opendataloader_pdf.convert()}.}
+\item{args}{Additional debug metadata and arguments passed to Python.}
+}
 }
 \description{
 Convert PDFs with OpenDataLoader PDF

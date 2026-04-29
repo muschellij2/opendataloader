@@ -8,8 +8,16 @@
 \description{
 Provides a reticulate-backed R interface to the opendataloader-pdf Python package for converting PDF files to Markdown, JSON, and HTML.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/muschellij2/opendataloader}
+  \item Report bugs at \url{https://github.com/muschellij2/opendataloader/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: John Muschelli \email{john.muschelli@gmail.com}
+\strong{Maintainer}: John Muschelli \email{muschellij2@gmail.com}
 
 }
 \keyword{internal}

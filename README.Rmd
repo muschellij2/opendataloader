@@ -1,13 +1,22 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+run_converter <- identical(Sys.getenv("OPENDATALOADER_README_RUN"), "true")
+```
 
 # opendataloader
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/muschellij2/opendataloader/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/muschellij2/opendataloader/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/muschellij2/opendataloader/graph/badge.svg)](https://app.codecov.io/gh/muschellij2/opendataloader)
+[![Codecov test coverage](https://codecov.io/gh/muschellij2/opendataloader/graph/badge.svg)](https://app.codecov.io/gh/muschellij2/opendataloader)
 <!-- badges: end -->
 
 `opendataloader` is an R interface to the Python
@@ -15,32 +24,31 @@ coverage](https://codecov.io/gh/muschellij2/opendataloader/graph/badge.svg)](htt
 package. It converts PDFs to Markdown, JSON, and HTML through
 [`reticulate`](https://rstudio.github.io/reticulate/).
 
-The package uses `reticulate::py_require()` so recent versions of
-reticulate can resolve `opendataloader-pdf` in a managed Python
-environment. The upstream Python package requires Python 3.10 or newer
-and Java 11 or newer.
+The package uses `reticulate::py_require()` so recent versions of reticulate
+can resolve `opendataloader-pdf` in a managed Python environment. The upstream
+Python package requires Python 3.10 or newer and Java 11 or newer.
 
 ## Installation
 
-``` r
+```{r install, eval = FALSE}
 install.packages("remotes")
 remotes::install_github("muschellij2/opendataloader")
 ```
 
-If you want reticulate to use a managed Python environment for this
-session, set this before loading the package:
+If you want reticulate to use a managed Python environment for this session,
+set this before loading the package:
 
-``` r
+```{r managed-python, eval = FALSE}
 Sys.setenv(RETICULATE_PYTHON = "managed")
 library(opendataloader)
 ```
 
 ## Basic Use
 
-The package includes a small example PDF so examples can use
-`system.file()` instead of relying on local files.
+The package includes a small example PDF so examples can use `system.file()`
+instead of relying on local files.
 
-``` r
+```{r example-pdf}
 library(opendataloader)
 
 example_pdf <- system.file(
@@ -54,12 +62,11 @@ if (!nzchar(example_pdf)) {
 }
 
 file.exists(example_pdf)
-#> [1] TRUE
 ```
 
 Convert one PDF to Markdown and JSON:
 
-``` r
+```{r convert-one, eval = run_converter}
 output_dir <- tempfile("opendataloader-output-")
 dir.create(output_dir)
 
@@ -77,7 +84,7 @@ conversion$result
 
 Set `verbose = FALSE` to ask the Python converter to run quietly:
 
-``` r
+```{r quiet-convert, eval = FALSE}
 quiet_conversion <- convert_pdf(
   input_path = example_pdf,
   output_dir = output_dir,
@@ -88,10 +95,10 @@ quiet_conversion <- convert_pdf(
 
 ## Conversion Options
 
-Common Python converter options are exposed as typed R arguments so
-invalid values fail before reticulate calls Python:
+Common Python converter options are exposed as typed R arguments so invalid
+values fail before reticulate calls Python:
 
-``` r
+```{r conversion-options, eval = FALSE}
 conversion <- convert_pdf(
   input_path = example_pdf,
   output_dir = output_dir,
@@ -111,7 +118,7 @@ conversion <- convert_pdf(
 
 Encrypted PDFs can be converted with `password`:
 
-``` r
+```{r encrypted-pdf, eval = FALSE}
 convert_pdf(
   input_path = "encrypted.pdf",
   output_dir = "converted",
@@ -120,26 +127,25 @@ convert_pdf(
 )
 ```
 
-Advanced or newly-added Python options can still be passed through
-`...`, but they must be named and must be simple R values (`NULL`,
-logical, numeric, or character).
+Advanced or newly-added Python options can still be passed through `...`, but
+they must be named and must be simple R values (`NULL`, logical, numeric, or
+character).
 
-By default, README rendering does not run the converter because that
-requires Java and the Python dependency resolver. To run the conversion
-chunks while rendering locally:
+By default, README rendering does not run the converter because that requires
+Java and the Python dependency resolver. To run the conversion chunks while
+rendering locally:
 
-``` r
+```{r render-readme, eval = FALSE}
 Sys.setenv(OPENDATALOADER_README_RUN = "true")
 devtools::build_readme()
 ```
 
 ## Batch Conversion
 
-Batch conversion is usually faster than converting files one at a time
-because the upstream Python package can handle multiple files in a
-single call.
+Batch conversion is usually faster than converting files one at a time because
+the upstream Python package can handle multiple files in a single call.
 
-``` r
+```{r batch-convert, eval = run_converter}
 pdfs <- rep(example_pdf, 2)
 batch_dir <- tempfile("opendataloader-batch-")
 dir.create(batch_dir)
@@ -155,7 +161,7 @@ batch_conversion$output_files
 
 For your own documents, pass a vector of file paths:
 
-``` r
+```{r own-files, eval = FALSE}
 pdfs <- list.files("pdfs", pattern = "[.]pdf$", full.names = TRUE)
 
 conversion <- convert_pdf(
@@ -170,16 +176,16 @@ conversion$result
 
 ## Optional Hybrid Mode
 
-Hybrid mode is an optional Python extra. Declare it before Python is
-initialized in the R session:
+Hybrid mode is an optional Python extra. Declare it before Python is initialized
+in the R session:
 
-``` r
+```{r hybrid-require, eval = FALSE}
 opendataloader_pdf_require(extras = "hybrid")
 ```
 
 Then pass the hybrid backend through to the converter:
 
-``` r
+```{r hybrid-convert, eval = FALSE}
 convert_pdf(
   input_path = example_pdf,
   output_dir = "converted-hybrid",
@@ -192,22 +198,14 @@ convert_pdf(
 
 Inspect the Python requirements reticulate has collected:
 
-``` r
+```{r requirements}
 opendataloader_python_requirements()
-#> ══════════════════════════ Python requirements ══════════════════════════
-#> ── Current requirements ─────────────────────────────────────────────────
-#>  Python:   >=3.10
-#>  Packages: numpy, opendataloader-pdf
-#> ── R package requests ───────────────────────────────────────────────────
-#> R package      Python packages                       Python version      
-#> reticulate     numpy                                                     
-#> opendataloader opendataloader-pdf                    >=3.10
 ```
 
-Use `py_require_opendataloader_pdf()` as an alias if you prefer names
-that make the reticulate connection explicit:
+Use `py_require_opendataloader_pdf()` as an alias if you prefer names that make
+the reticulate connection explicit:
 
-``` r
+```{r py-require-alias, eval = FALSE}
 py_require_opendataloader_pdf(
   extras = "hybrid",
   python_version = ">=3.10"
@@ -216,38 +214,35 @@ py_require_opendataloader_pdf(
 
 ## Java Check
 
-`check_java()` verifies that `java` is available and reports Java 11 or
-newer:
+`check_java()` verifies that `java` is available and reports Java 11 or newer:
 
-``` r
+```{r java-check, eval = FALSE}
 check_java()
 ```
 
-If this fails, install Java 11 or newer and make sure `java` is on
-`PATH`.
+If this fails, install Java 11 or newer and make sure `java` is on `PATH`.
 
 ## Troubleshooting
 
 If reticulate selects a Python environment that does not have
-`opendataloader-pdf`, start a fresh R session and request a managed
-Python environment before loading this package:
+`opendataloader-pdf`, start a fresh R session and request a managed Python
+environment before loading this package:
 
-``` r
+```{r troubleshooting-managed, eval = FALSE}
 Sys.setenv(RETICULATE_PYTHON = "managed")
 library(opendataloader)
 ```
 
-If dependency resolution is unavailable because you are offline,
-configure reticulate or `uv` before Python is initialized:
+If dependency resolution is unavailable because you are offline, configure
+reticulate or `uv` before Python is initialized:
 
-``` r
+```{r troubleshooting-uv, eval = FALSE}
 Sys.setenv(UV_OFFLINE = "1")
 library(opendataloader)
 ```
 
 For reproducible examples or tests, use the bundled example PDF:
 
-``` r
+```{r system-file-summary}
 basename(example_pdf)
-#> [1] "opendataloader-example.pdf"
 ```
